@@ -9,7 +9,7 @@
     
     <div class="content">
         <div class="status-update">
-            <h2><?php bloginfo('name'); ?> is working on myspace plans!</h2>
+<h2><?php echo esc_html(get_transient('myspace_banner_message') ?: get_bloginfo('name') . ' is working on myspace plans!'); ?></h2>
         </div>
         
         <div class="blog-section">
