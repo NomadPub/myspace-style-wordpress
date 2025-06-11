@@ -423,7 +423,7 @@ class MySpace_Enhanced_Profile_Widget extends MySpace_Profile_Widget {
         if ($gender) echo '<p><strong>Gender:</strong> ' . esc_html($gender) . '</p>';
         if ($age) echo '<p><strong>Age:</strong> ' . esc_html($age) . '</p>';
         if ($location) echo '<p><strong>Location:</strong> ' . esc_html($location) . '</p>';
-        echo '<p><strong>Country:</strong> United States</p>';
+        //echo '<p><strong>Country:</strong> United States</p>';
         echo '</div>';
         
         if (get_theme_mod('myspace_show_last_login', true)) {
