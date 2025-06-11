@@ -153,13 +153,13 @@ class MySpace_Contact_Widget extends WP_Widget {
         echo '<div class="contact-section">';
         echo '<h3>Contacting ' . get_bloginfo('name') . '</h3>';
         echo '<div class="contact-options">';
-        echo '<a href="mailto:' . get_option('admin_email') . '" class="contact-link">📧 Send Message</a>';
+        echo '<a href="/contact" class="contact-link">📧 Send Message</a>';
         echo '<a href="#" class="contact-link">👥 Add to Friends</a>';
         echo '<a href="#" class="contact-link">💬 Instant Message</a>';
         echo '<a href="#" class="contact-link">👥 Add to Group</a>';
         echo '<a href="mailto:' . get_option('admin_email') . '" class="contact-link">📨 Forward to Friend</a>';
         echo '<a href="#" class="contact-link">⭐ Add to Favorites</a>';
-        echo '<a href="/blocked">🚫 Block User</a>';
+        echo '<a href="/blocked" class="contact-link">🚫 Block User</a>';
         echo '<a href="#" class="contact-link">📊 Rank User</a>';
         echo '</div>';
         echo '</div>';
