@@ -283,6 +283,35 @@ class MySpace_Music_Widget extends WP_Widget {
     }
 }
 
+// Custom Widget: MySpace Banner
+class MySpace_Banner_Widget extends WP_Widget {
+  function __construct() {
+    parent::__construct('myspace_banner_widget', 'MySpace Banner');
+  }
+
+  function widget($args, $instance) {
+    // Store message in a transient so index.php can access it
+    $message = !empty($instance['message']) ? $instance['message'] : '';
+    set_transient('myspace_banner_message', $message, 0);
+  }
+
+  function form($instance) {
+    $message = !empty($instance['message']) ? $instance['message'] : '';
+    echo '<p><label for="' . $this->get_field_id('message') . '">Banner Message:</label>';
+    echo '<input class="widefat" id="' . $this->get_field_id('message') . '" name="' . $this->get_field_name('message') . '" type="text" value="' . esc_attr($message) . '"></p>';
+  }
+
+  function update($new_instance, $old_instance) {
+    $instance = [];
+    $instance['message'] = sanitize_text_field($new_instance['message']);
+    return $instance;
+  }
+}
+add_action('widgets_init', function() {
+  register_widget('MySpace_Banner_Widget');
+});
+
+
 // Register all widgets
 function register_myspace_widgets() {
     register_widget('MySpace_Profile_Widget');
