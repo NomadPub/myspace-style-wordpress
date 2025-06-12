@@ -9,12 +9,12 @@
 
 <header class="site-header">
     <div class="header-top">
-        <div class="search-container">
+        <div class="search-container" align="right">
             <form role="search" method="get" action="<?php echo home_url('/'); ?>">
                 <input type="search" placeholder="Search..." value="<?php echo get_search_query(); ?>" name="s">
-                <select name="search_type">
+                <!--<select name="search_type">
                     <option value="MySpace">My site.</option>
-                </select>
+                </select> -->
                 <input type="submit" value="Go!">
             </form>
         </div>
