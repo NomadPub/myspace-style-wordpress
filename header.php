@@ -47,12 +47,3 @@ function myspace_fallback_menu() {
     echo '</ul>';
 }
 ?>
-
-<!-- footer.php -->
-<footer class="site-footer">
-    <p>&copy; <?php echo date('Y'); ?> <?php bloginfo('name'); ?>. MySpace Revival Theme.</p>
-</footer>
-
-<?php wp_footer(); ?>
-</body>
-</html>
