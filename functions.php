@@ -34,7 +34,7 @@ function myspace_widgets_init() {
 }
 add_action('widgets_init', 'myspace_widgets_init');
 
-// Custom Profile Picture Widget
+// Enhanced Profile Widget (combining basic and enhanced features)
 class MySpace_Profile_Widget extends WP_Widget {
     public function __construct() {
         parent::__construct(
@@ -48,19 +48,45 @@ class MySpace_Profile_Widget extends WP_Widget {
         echo $args['before_widget'];
         
         $name = !empty($instance['name']) ? $instance['name'] : 'User';
+        $status = !empty($instance['status']) ? $instance['status'] : '';
+        $statusauth = !empty($instance['statusauth']) ? $instance['statusauth'] : '';
         $age = !empty($instance['age']) ? $instance['age'] : '';
+        $gender = !empty($instance['gender']) ? $instance['gender'] : '';
         $location = !empty($instance['location']) ? $instance['location'] : '';
         $image = !empty($instance['image']) ? $instance['image'] : '';
         
         echo '<div class="profile-section">';
         echo '<h2 class="profile-name">' . esc_html($name) . '</h2>';
+        
+        if ($status) {
+            echo '<p class="profile-status"> ' . esc_html($status) . '</p>';
+        }
+        if ($statusauth) {
+            echo '<p><strong>-</strong> ' . esc_html($statusauth) . '</p>';
+        }
+        
         if ($image) {
             echo '<img src="' . esc_url($image) . '" alt="Profile Picture" class="profile-pic">';
         }
-        echo '<div class="profile-info">';
-        if ($age) echo '<p>Age: ' . esc_html($age) . '</p>';
-        if ($location) echo '<p>Location: ' . esc_html($location) . '</p>';
+        
+        echo '<div class="profile-details">';
+        if ($gender) echo '<p><strong>Gender:</strong> ' . esc_html($gender) . '</p>';
+        if ($age) echo '<p><strong>Age:</strong> ' . esc_html($age) . '</p>';
+        if ($location) echo '<p><strong>Location:</strong> ' . esc_html($location) . '</p>';
         echo '</div>';
+        
+        if (get_theme_mod('myspace_show_last_login', true)) {
+            $last_login = myspace_get_last_login();
+            if ($last_login) {
+                echo '<div class="last-login">Last Login: ' . $last_login . '</div>';
+            }
+        }
+        
+        echo '<div class="view-links">';
+        echo '<a href="' . home_url('/pics') . '">Pics</a> | ';
+        echo '<a href="' . home_url('/videos') . '">Videos</a>';
+        echo '</div>';
+        
         echo '</div>';
         
         echo $args['after_widget'];
@@ -68,7 +94,10 @@ class MySpace_Profile_Widget extends WP_Widget {
 
     public function form($instance) {
         $name = !empty($instance['name']) ? $instance['name'] : '';
+        $status = !empty($instance['status']) ? $instance['status'] : '';
+        $statusauth = !empty($instance['statusauth']) ? $instance['statusauth'] : '';
         $age = !empty($instance['age']) ? $instance['age'] : '';
+        $gender = !empty($instance['gender']) ? $instance['gender'] : '';
         $location = !empty($instance['location']) ? $instance['location'] : '';
         $image = !empty($instance['image']) ? $instance['image'] : '';
         ?>
@@ -77,8 +106,25 @@ class MySpace_Profile_Widget extends WP_Widget {
             <input class="widefat" id="<?php echo $this->get_field_id('name'); ?>" name="<?php echo $this->get_field_name('name'); ?>" type="text" value="<?php echo esc_attr($name); ?>">
         </p>
         <p>
+            <label for="<?php echo $this->get_field_id('status'); ?>">Status Quote:</label>
+            <input class="widefat" id="<?php echo $this->get_field_id('status'); ?>" name="<?php echo $this->get_field_name('status'); ?>" type="text" value="<?php echo esc_attr($status); ?>">
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id('statusauth'); ?>">Quote Author:</label>
+            <input class="widefat" id="<?php echo $this->get_field_id('statusauth'); ?>" name="<?php echo $this->get_field_name('statusauth'); ?>" type="text" value="<?php echo esc_attr($statusauth); ?>">
+        </p>
+        <p>
             <label for="<?php echo $this->get_field_id('age'); ?>">Age:</label>
             <input class="widefat" id="<?php echo $this->get_field_id('age'); ?>" name="<?php echo $this->get_field_name('age'); ?>" type="text" value="<?php echo esc_attr($age); ?>">
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id('gender'); ?>">Gender:</label>
+            <select class="widefat" id="<?php echo $this->get_field_id('gender'); ?>" name="<?php echo $this->get_field_name('gender'); ?>">
+                <option value="">Select Gender</option>
+                <option value="Male" <?php selected($gender, 'Male'); ?>>Male</option>
+                <option value="Female" <?php selected($gender, 'Female'); ?>>Female</option>
+                <option value="Non-binary" <?php selected($gender, 'Non-binary'); ?>>Non-binary</option>
+            </select>
         </p>
         <p>
             <label for="<?php echo $this->get_field_id('location'); ?>">Location:</label>
@@ -95,7 +141,10 @@ class MySpace_Profile_Widget extends WP_Widget {
     public function update($new_instance, $old_instance) {
         $instance = array();
         $instance['name'] = (!empty($new_instance['name'])) ? strip_tags($new_instance['name']) : '';
+        $instance['status'] = (!empty($new_instance['status'])) ? strip_tags($new_instance['status']) : '';
+        $instance['statusauth'] = (!empty($new_instance['statusauth'])) ? strip_tags($new_instance['statusauth']) : '';
         $instance['age'] = (!empty($new_instance['age'])) ? strip_tags($new_instance['age']) : '';
+        $instance['gender'] = (!empty($new_instance['gender'])) ? strip_tags($new_instance['gender']) : '';
         $instance['location'] = (!empty($new_instance['location'])) ? strip_tags($new_instance['location']) : '';
         $instance['image'] = (!empty($new_instance['image'])) ? esc_url_raw($new_instance['image']) : '';
         return $instance;
@@ -244,7 +293,7 @@ class MySpace_Interests_Widget extends WP_Widget {
     }
 }
 
-// Music Widget
+// FIXED Music Widget - This is the key fix for your Apple Music embed
 class MySpace_Music_Widget extends WP_Widget {
     public function __construct() {
         parent::__construct(
@@ -260,7 +309,8 @@ class MySpace_Music_Widget extends WP_Widget {
         echo '<div class="music-section">';
         echo '<h3>Music</h3>';
         if ($embed_code) {
-            echo wp_kses_post($embed_code);
+            // Use custom kses rules to allow iframe with specific attributes
+            echo wp_kses($embed_code, $this->get_allowed_html());
         }
         echo '</div>';
         echo $args['after_widget'];
@@ -271,48 +321,69 @@ class MySpace_Music_Widget extends WP_Widget {
         ?>
         <p>
             <label for="<?php echo $this->get_field_id('embed_code'); ?>">Embed Code (Spotify/Apple Music):</label>
-            <textarea class="widefat" id="<?php echo $this->get_field_id('embed_code'); ?>" name="<?php echo $this->get_field_name('embed_code'); ?>" rows="4"><?php echo esc_textarea($embed_code); ?></textarea>
+            <textarea class="widefat" id="<?php echo $this->get_field_id('embed_code'); ?>" name="<?php echo $this->get_field_name('embed_code'); ?>" rows="6"><?php echo esc_textarea($embed_code); ?></textarea>
+            <small>Paste your Apple Music or Spotify embed code here. Make sure it's from the official sharing options.</small>
         </p>
         <?php
     }
 
     public function update($new_instance, $old_instance) {
         $instance = array();
-        $instance['embed_code'] = (!empty($new_instance['embed_code'])) ? wp_kses_post($new_instance['embed_code']) : '';
+        $instance['embed_code'] = (!empty($new_instance['embed_code'])) ? wp_kses($new_instance['embed_code'], $this->get_allowed_html()) : '';
         return $instance;
+    }
+    
+    // Custom allowed HTML for music embeds
+    private function get_allowed_html() {
+        return array(
+            'iframe' => array(
+                'src' => array(),
+                'width' => array(),
+                'height' => array(),
+                'frameborder' => array(),
+                'allow' => array(),
+                'sandbox' => array(),
+                'style' => array(),
+                'title' => array(),
+                'loading' => array(),
+                'allowfullscreen' => array(),
+                'allowtransparency' => array()
+            ),
+            'div' => array(
+                'class' => array(),
+                'id' => array(),
+                'style' => array()
+            )
+        );
     }
 }
 
 // Custom Widget: MySpace Banner
 class MySpace_Banner_Widget extends WP_Widget {
-  function __construct() {
-    parent::__construct('myspace_banner_widget', 'MySpace Banner');
-  }
+    function __construct() {
+        parent::__construct('myspace_banner_widget', 'MySpace Banner');
+    }
 
-  function widget($args, $instance) {
-    // Store message in a transient so index.php can access it
-    $message = !empty($instance['message']) ? $instance['message'] : '';
-    set_transient('myspace_banner_message', $message, 0);
-  }
+    function widget($args, $instance) {
+        // Store message in a transient so index.php can access it
+        $message = !empty($instance['message']) ? $instance['message'] : '';
+        set_transient('myspace_banner_message', $message, 0);
+    }
 
-  function form($instance) {
-    $message = !empty($instance['message']) ? $instance['message'] : '';
-    echo '<p><label for="' . $this->get_field_id('message') . '">Banner Message:</label>';
-    echo '<input class="widefat" id="' . $this->get_field_id('message') . '" name="' . $this->get_field_name('message') . '" type="text" value="' . esc_attr($message) . '"></p>';
-  }
+    function form($instance) {
+        $message = !empty($instance['message']) ? $instance['message'] : '';
+        echo '<p><label for="' . $this->get_field_id('message') . '">Banner Message:</label>';
+        echo '<input class="widefat" id="' . $this->get_field_id('message') . '" name="' . $this->get_field_name('message') . '" type="text" value="' . esc_attr($message) . '"></p>';
+    }
 
-  function update($new_instance, $old_instance) {
-    $instance = [];
-    $instance['message'] = sanitize_text_field($new_instance['message']);
-    return $instance;
-  }
+    function update($new_instance, $old_instance) {
+        $instance = [];
+        $instance['message'] = sanitize_text_field($new_instance['message']);
+        return $instance;
+    }
 }
-add_action('widgets_init', function() {
-  register_widget('MySpace_Banner_Widget');
-});
 
-
-// Register all widgets
+// Register all widgets - SINGLE registration to avoid conflicts
 function register_myspace_widgets() {
     register_widget('MySpace_Profile_Widget');
     register_widget('MySpace_Mood_Widget');
@@ -320,6 +391,7 @@ function register_myspace_widgets() {
     register_widget('MySpace_URL_Widget');
     register_widget('MySpace_Interests_Widget');
     register_widget('MySpace_Music_Widget');
+    register_widget('MySpace_Banner_Widget');
 }
 add_action('widgets_init', 'register_myspace_widgets');
 
@@ -330,9 +402,7 @@ function myspace_admin_scripts() {
 }
 add_action('admin_enqueue_scripts', 'myspace_admin_scripts');
 
-
-// from the beginning
-// Add to functions.php - Customizer Settings
+// Customizer Settings
 function myspace_customize_register($wp_customize) {
     // Add MySpace section
     $wp_customize->add_section('myspace_options', array(
@@ -396,137 +466,6 @@ function myspace_get_last_login($user_id = null) {
     return false;
 }
 
-
-// Enhanced Profile Widget with last login - FIXED VERSION
-class MySpace_Enhanced_Profile_Widget extends MySpace_Profile_Widget {
-    public function widget($args, $instance) {
-        echo $args['before_widget'];
-        
-        $name = !empty($instance['name']) ? $instance['name'] : 'User';
-        $status = !empty($instance['status']) ? $instance['status'] : '';
-        $statusauth = !empty($instance['statusauth']) ? $instance['statusauth'] : '';
-        $age = !empty($instance['age']) ? $instance['age'] : '';
-        $gender = !empty($instance['gender']) ? $instance['gender'] : '';
-        $location = !empty($instance['location']) ? $instance['location'] : '';
-        $image = !empty($instance['image']) ? $instance['image'] : '';
-        
-        echo '<div class="profile-section">';
-        echo '<h2 class="profile-name">' . esc_html($name) . '</h2>';
-        
-        if ($status) {
-            echo '<p class="profile-status">' . esc_html($status) . '</p>';
-        }
-        if ($statusauth) {
-            echo '<p><strong>-</strong> ' . esc_html($statusauth) . '</p>';
-        }
-        
-        if ($image) {
-            echo '<img src="' . esc_url($image) . '" alt="Profile Picture" class="profile-pic">';
-        }
-        
-        echo '<div class="profile-details">';
-        if ($gender) echo '<p><strong>Gender:</strong> ' . esc_html($gender) . '</p>';
-        if ($age) echo '<p><strong>Age:</strong> ' . esc_html($age) . '</p>';
-        if ($location) echo '<p><strong>Location:</strong> ' . esc_html($location) . '</p>';
-        echo '</div>';
-        
-        if (get_theme_mod('myspace_show_last_login', true)) {
-            $last_login = myspace_get_last_login();
-            if ($last_login) {
-                echo '<div class="last-login">Last Login: ' . $last_login . '</div>';
-            }
-        }
-        
-        echo '<div class="view-links">';
-        echo '<a href="' . home_url('/pics') . '">Pics</a> | ';
-        echo '<a href="' . home_url('/videos') . '">Videos</a>';
-        echo '</div>';
-        
-        echo '</div>';
-        
-        echo $args['after_widget'];
-    }
-    
-    public function form($instance) {
-        // Get values from parent form fields
-        $name = !empty($instance['name']) ? $instance['name'] : '';
-        $age = !empty($instance['age']) ? $instance['age'] : '';
-        $location = !empty($instance['location']) ? $instance['location'] : '';
-        $image = !empty($instance['image']) ? $instance['image'] : '';
-        
-        // Get enhanced fields
-        $status = !empty($instance['status']) ? $instance['status'] : '';
-        $statusauth = !empty($instance['statusauth']) ? $instance['statusauth'] : '';
-        $gender = !empty($instance['gender']) ? $instance['gender'] : '';
-        ?>
-        <p>
-            <label for="<?php echo $this->get_field_id('name'); ?>">Name:</label>
-            <input class="widefat" id="<?php echo $this->get_field_id('name'); ?>" name="<?php echo $this->get_field_name('name'); ?>" type="text" value="<?php echo esc_attr($name); ?>">
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('age'); ?>">Age:</label>
-            <input class="widefat" id="<?php echo $this->get_field_id('age'); ?>" name="<?php echo $this->get_field_name('age'); ?>" type="text" value="<?php echo esc_attr($age); ?>">
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('location'); ?>">Location:</label>
-            <input class="widefat" id="<?php echo $this->get_field_id('location'); ?>" name="<?php echo $this->get_field_name('location'); ?>" type="text" value="<?php echo esc_attr($location); ?>">
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('image'); ?>">Profile Image URL:</label>
-            <input class="widefat" id="<?php echo $this->get_field_id('image'); ?>" name="<?php echo $this->get_field_name('image'); ?>" type="url" value="<?php echo esc_attr($image); ?>">
-            <button type="button" class="button upload-image-button">Choose Image</button>
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('status'); ?>">Status Quote:</label>
-            <input class="widefat" id="<?php echo $this->get_field_id('status'); ?>" name="<?php echo $this->get_field_name('status'); ?>" type="text" value="<?php echo esc_attr($status); ?>">
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('statusauth'); ?>">Quote Author:</label>
-            <input class="widefat" id="<?php echo $this->get_field_id('statusauth'); ?>" name="<?php echo $this->get_field_name('statusauth'); ?>" type="text" value="<?php echo esc_attr($statusauth); ?>">
-        </p>
-        <p>
-            <label for="<?php echo $this->get_field_id('gender'); ?>">Gender:</label>
-            <select class="widefat" id="<?php echo $this->get_field_id('gender'); ?>" name="<?php echo $this->get_field_name('gender'); ?>">
-                <option value="">Select Gender</option>
-                <option value="Male" <?php selected($gender, 'Male'); ?>>Male</option>
-                <option value="Female" <?php selected($gender, 'Female'); ?>>Female</option>
-                <option value="Non-binary" <?php selected($gender, 'Non-binary'); ?>>Non-binary</option>
-            </select>
-        </p>
-        <?php
-    }
-    
-    public function update($new_instance, $old_instance) {
-        $instance = array();
-        
-        // Handle all fields including the parent class fields
-        $instance['name'] = (!empty($new_instance['name'])) ? strip_tags($new_instance['name']) : '';
-        $instance['age'] = (!empty($new_instance['age'])) ? strip_tags($new_instance['age']) : '';
-        $instance['location'] = (!empty($new_instance['location'])) ? strip_tags($new_instance['location']) : '';
-        $instance['image'] = (!empty($new_instance['image'])) ? esc_url_raw($new_instance['image']) : '';
-        
-        // Handle enhanced fields
-        $instance['status'] = (!empty($new_instance['status'])) ? strip_tags($new_instance['status']) : '';
-        $instance['statusauth'] = (!empty($new_instance['statusauth'])) ? strip_tags($new_instance['statusauth']) : '';
-        $instance['gender'] = (!empty($new_instance['gender'])) ? strip_tags($new_instance['gender']) : '';
-        
-        return $instance;
-    }
-}
-
-
-// Replace the basic profile widget with enhanced version
-function register_enhanced_myspace_widgets() {
-    unregister_widget('MySpace_Profile_Widget');
-    register_widget('MySpace_Enhanced_Profile_Widget');
-    register_widget('MySpace_Mood_Widget');
-    register_widget('MySpace_Contact_Widget');
-    register_widget('MySpace_URL_Widget');
-    register_widget('MySpace_Interests_Widget');
-    register_widget('MySpace_Music_Widget');
-}
-add_action('widgets_init', 'register_enhanced_myspace_widgets');
-
 // Custom CSS from customizer
 function myspace_customizer_css() {
     $header_color = get_theme_mod('myspace_header_color', '#2e5fb5');
@@ -548,7 +487,5 @@ function myspace_customizer_css() {
     <?php
 }
 add_action('wp_head', 'myspace_customizer_css');
-
-
 
 ?>
