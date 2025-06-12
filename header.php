@@ -13,14 +13,14 @@
             <form role="search" method="get" action="<?php echo home_url('/'); ?>">
                 <input type="search" placeholder="Search..." value="<?php echo get_search_query(); ?>" name="s">
                 <select name="search_type">
-                    <option value="MySpace">MySpace</option>
+                    <option value="MySpace">My site.</option>
                 </select>
-                <input type="submit" value="Search">
+                <input type="submit" value="Go!">
             </form>
         </div>
-        <div class="powered-by">
-            powered by <span class="google-text">Google</span>
-        </div>
+        <!-- <div class="powered-by">
+            powered by <span class="">Google</span>
+        </div> -->
     </div>
     
     <nav class="main-navigation">
