@@ -17,6 +17,9 @@ body {
     font-size: 11px;
     background: #e8f4fd;
     color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 a {
@@ -122,7 +125,7 @@ a:hover {
     text-decoration: none;
 }
 
-/* Main Container */
+/* Main Container - Fixed for proper footer positioning */
 .container {
     max-width: 1200px;
     margin: 80px auto 0;
@@ -131,6 +134,16 @@ a:hover {
     gap: 20px;
     background: white;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    flex: 1;
+    position: relative;
+    z-index: 1;
+    min-height: calc(100vh - 160px); /* Adjust based on header/footer height */
+}
+
+.container::after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 /* Sidebar Styles */
@@ -447,17 +460,18 @@ a:hover {
     color: #333;
 }
 
-/* Footer - FIXED VERSION */
+/* Footer - Fixed positioning */
 .site-footer {
     background: #2e5fb5;
     color: white;
     text-align: center;
     padding: 15px;
-    margin-top: 40px;
     font-size: 10px;
-    position: relative;  /* Add this */
-    z-index: 1;          /* Add this - lower than header's z-index: 1000 */
-    clear: both;         /* Add this to ensure it clears any floated content */
+    margin-top: auto;
+    position: static !important;
+    clear: both;
+    z-index: auto !important;
+    float: none !important;
 }
 
 /* Responsive Design */
@@ -465,6 +479,7 @@ a:hover {
     .container {
         flex-direction: column;
         margin-top: 120px;
+        min-height: calc(100vh - 200px);
     }
     
     .sidebar {
