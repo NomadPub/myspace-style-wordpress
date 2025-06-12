@@ -396,13 +396,15 @@ function myspace_get_last_login($user_id = null) {
     return false;
 }
 
-// Enhanced Profile Widget with last login
+
+// Enhanced Profile Widget with last login - FIXED VERSION
 class MySpace_Enhanced_Profile_Widget extends MySpace_Profile_Widget {
     public function widget($args, $instance) {
         echo $args['before_widget'];
         
         $name = !empty($instance['name']) ? $instance['name'] : 'User';
         $status = !empty($instance['status']) ? $instance['status'] : '';
+        $statusauth = !empty($instance['statusauth']) ? $instance['statusauth'] : '';
         $age = !empty($instance['age']) ? $instance['age'] : '';
         $gender = !empty($instance['gender']) ? $instance['gender'] : '';
         $location = !empty($instance['location']) ? $instance['location'] : '';
@@ -412,7 +414,10 @@ class MySpace_Enhanced_Profile_Widget extends MySpace_Profile_Widget {
         echo '<h2 class="profile-name">' . esc_html($name) . '</h2>';
         
         if ($status) {
-            echo '<p class="profile-status">"' . esc_html($status) . '"</p>';
+            echo '<p class="profile-status">' . esc_html($status) . '</p>';
+        }
+        if ($statusauth) {
+            echo '<p><strong>-</strong> ' . esc_html($statusauth) . '</p>';
         }
         
         if ($image) {
@@ -423,7 +428,6 @@ class MySpace_Enhanced_Profile_Widget extends MySpace_Profile_Widget {
         if ($gender) echo '<p><strong>Gender:</strong> ' . esc_html($gender) . '</p>';
         if ($age) echo '<p><strong>Age:</strong> ' . esc_html($age) . '</p>';
         if ($location) echo '<p><strong>Location:</strong> ' . esc_html($location) . '</p>';
-        //echo '<p><strong>Country:</strong> United States</p>';
         echo '</div>';
         
         if (get_theme_mod('myspace_show_last_login', true)) {
@@ -444,14 +448,41 @@ class MySpace_Enhanced_Profile_Widget extends MySpace_Profile_Widget {
     }
     
     public function form($instance) {
-        parent::form($instance);
+        // Get values from parent form fields
+        $name = !empty($instance['name']) ? $instance['name'] : '';
+        $age = !empty($instance['age']) ? $instance['age'] : '';
+        $location = !empty($instance['location']) ? $instance['location'] : '';
+        $image = !empty($instance['image']) ? $instance['image'] : '';
         
+        // Get enhanced fields
         $status = !empty($instance['status']) ? $instance['status'] : '';
+        $statusauth = !empty($instance['statusauth']) ? $instance['statusauth'] : '';
         $gender = !empty($instance['gender']) ? $instance['gender'] : '';
         ?>
         <p>
+            <label for="<?php echo $this->get_field_id('name'); ?>">Name:</label>
+            <input class="widefat" id="<?php echo $this->get_field_id('name'); ?>" name="<?php echo $this->get_field_name('name'); ?>" type="text" value="<?php echo esc_attr($name); ?>">
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id('age'); ?>">Age:</label>
+            <input class="widefat" id="<?php echo $this->get_field_id('age'); ?>" name="<?php echo $this->get_field_name('age'); ?>" type="text" value="<?php echo esc_attr($age); ?>">
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id('location'); ?>">Location:</label>
+            <input class="widefat" id="<?php echo $this->get_field_id('location'); ?>" name="<?php echo $this->get_field_name('location'); ?>" type="text" value="<?php echo esc_attr($location); ?>">
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id('image'); ?>">Profile Image URL:</label>
+            <input class="widefat" id="<?php echo $this->get_field_id('image'); ?>" name="<?php echo $this->get_field_name('image'); ?>" type="url" value="<?php echo esc_attr($image); ?>">
+            <button type="button" class="button upload-image-button">Choose Image</button>
+        </p>
+        <p>
             <label for="<?php echo $this->get_field_id('status'); ?>">Status Quote:</label>
             <input class="widefat" id="<?php echo $this->get_field_id('status'); ?>" name="<?php echo $this->get_field_name('status'); ?>" type="text" value="<?php echo esc_attr($status); ?>">
+        </p>
+        <p>
+            <label for="<?php echo $this->get_field_id('statusauth'); ?>">Quote Author:</label>
+            <input class="widefat" id="<?php echo $this->get_field_id('statusauth'); ?>" name="<?php echo $this->get_field_name('statusauth'); ?>" type="text" value="<?php echo esc_attr($statusauth); ?>">
         </p>
         <p>
             <label for="<?php echo $this->get_field_id('gender'); ?>">Gender:</label>
@@ -466,12 +497,23 @@ class MySpace_Enhanced_Profile_Widget extends MySpace_Profile_Widget {
     }
     
     public function update($new_instance, $old_instance) {
-        $instance = parent::update($new_instance, $old_instance);
+        $instance = array();
+        
+        // Handle all fields including the parent class fields
+        $instance['name'] = (!empty($new_instance['name'])) ? strip_tags($new_instance['name']) : '';
+        $instance['age'] = (!empty($new_instance['age'])) ? strip_tags($new_instance['age']) : '';
+        $instance['location'] = (!empty($new_instance['location'])) ? strip_tags($new_instance['location']) : '';
+        $instance['image'] = (!empty($new_instance['image'])) ? esc_url_raw($new_instance['image']) : '';
+        
+        // Handle enhanced fields
         $instance['status'] = (!empty($new_instance['status'])) ? strip_tags($new_instance['status']) : '';
+        $instance['statusauth'] = (!empty($new_instance['statusauth'])) ? strip_tags($new_instance['statusauth']) : '';
         $instance['gender'] = (!empty($new_instance['gender'])) ? strip_tags($new_instance['gender']) : '';
+        
         return $instance;
     }
 }
+
 
 // Replace the basic profile widget with enhanced version
 function register_enhanced_myspace_widgets() {
