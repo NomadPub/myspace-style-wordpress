@@ -9,18 +9,27 @@
 
 <header class="site-header">
     <div class="header-top">
-        <div class="search-container" align="right">
-            <form role="search" method="get" action="<?php echo home_url('/'); ?>">
-                <input type="search" placeholder="Search..." value="<?php echo get_search_query(); ?>" name="s">
-                <!--<select name="search_type">
-                    <option value="MySpace">My site.</option>
-                </select> -->
-                <input type="submit" value="Go!">
-            </form>
+        <div class="site-title">
+            <h1><a href="<?php echo home_url(); ?>"><?php bloginfo('name'); ?></a></h1>
+            <?php if (get_bloginfo('description')) : ?>
+                <p class="site-tagline"><?php bloginfo('description'); ?></p>
+            <?php endif; ?>
         </div>
-        <!-- <div class="powered-by">
-            powered by <span class="">Google</span>
-        </div> -->
+        
+        <div class="header-right">
+            <div class="search-container">
+                <form role="search" method="get" action="<?php echo home_url('/'); ?>">
+                    <input type="search" placeholder="Search..." value="<?php echo get_search_query(); ?>" name="s">
+                    <select name="search_type">
+                        <option value="MySpace">MySpace</option>
+                    </select>
+                    <input type="submit" value="Search">
+                </form>
+            </div>
+            <div class="powered-by">
+                powered by <span class="google-text">Google</span>
+            </div>
+        </div>
     </div>
     
     <nav class="main-navigation">
