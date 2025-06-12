@@ -447,7 +447,7 @@ a:hover {
     color: #333;
 }
 
-/* Footer */
+/* Footer - FIXED VERSION */
 .site-footer {
     background: #2e5fb5;
     color: white;
@@ -455,6 +455,9 @@ a:hover {
     padding: 15px;
     margin-top: 40px;
     font-size: 10px;
+    position: relative;  /* Add this */
+    z-index: 1;          /* Add this - lower than header's z-index: 1000 */
+    clear: both;         /* Add this to ensure it clears any floated content */
 }
 
 /* Responsive Design */
