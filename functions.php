@@ -165,7 +165,7 @@ class MySpace_Mood_Widget extends WP_Widget {
         echo $args['before_widget'];
         $mood = !empty($instance['mood']) ? $instance['mood'] : 'happy';
         echo '<div class="mood-section">';
-        echo '<p><strong>Mood:</strong> ' . esc_html($mood) . ' <span class="mood-emoji">😊</span></p>';
+        echo '<p><strong>Mood:</strong> ' . esc_html($mood) . ' <span class="mood-emoji">🫠</span></p>';
         echo '</div>';
         echo $args['after_widget'];
     }
