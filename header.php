@@ -27,7 +27,7 @@
                 </form>
             </div>
             <div class="powered-by">
-                powered by <span class="google-text">Google</span>
+                powered by <span class="google-text">electrons</span>
             </div>
         </div>
     </div>
