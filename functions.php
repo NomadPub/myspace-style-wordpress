@@ -64,13 +64,11 @@ class MySpace_Profile_Widget extends WP_Widget {
         }
         
         if ($status) {
-            echo '<p class="profile-status"> ' . esc_html($status) . '</p>';
+            echo '<p class="profile-status">' . esc_html($status) . '</p>';
         }
         if ($statusauth) {
             echo '<p><strong>-</strong> ' . esc_html($statusauth) . '</p>';
         }
-        
-        
         
         echo '<div class="profile-details">';
         if ($gender) echo '<p><strong>Gender:</strong> ' . esc_html($gender) . '</p>';
@@ -296,7 +294,7 @@ class MySpace_Interests_Widget extends WP_Widget {
     }
 }
 
-// FIXED Music Widget - This is the key fix for your Apple Music embed
+// Music Widget - Fixed for Apple Music embed
 class MySpace_Music_Widget extends WP_Widget {
     public function __construct() {
         parent::__construct(
@@ -363,23 +361,23 @@ class MySpace_Music_Widget extends WP_Widget {
 
 // Custom Widget: MySpace Banner
 class MySpace_Banner_Widget extends WP_Widget {
-    function __construct() {
+    public function __construct() {
         parent::__construct('myspace_banner_widget', 'MySpace Banner');
     }
 
-    function widget($args, $instance) {
+    public function widget($args, $instance) {
         // Store message in a transient so index.php can access it
         $message = !empty($instance['message']) ? $instance['message'] : '';
         set_transient('myspace_banner_message', $message, 0);
     }
 
-    function form($instance) {
+    public function form($instance) {
         $message = !empty($instance['message']) ? $instance['message'] : '';
         echo '<p><label for="' . $this->get_field_id('message') . '">Banner Message:</label>';
         echo '<input class="widefat" id="' . $this->get_field_id('message') . '" name="' . $this->get_field_name('message') . '" type="text" value="' . esc_attr($message) . '"></p>';
     }
 
-    function update($new_instance, $old_instance) {
+    public function update($new_instance, $old_instance) {
         $instance = [];
         $instance['message'] = sanitize_text_field($new_instance['message']);
         return $instance;
@@ -499,17 +497,17 @@ add_action('wp_head', 'myspace_customizer_css');
 class MySpace_Footer_Walker extends Walker_Nav_Menu {
     
     // Start Level
-    function start_lvl(&$output, $depth = 0, $args = null) {
+    public function start_lvl(&$output, $depth = 0, $args = null) {
         // Not needed for single level footer menu
     }
     
     // End Level
-    function end_lvl(&$output, $depth = 0, $args = null) {
+    public function end_lvl(&$output, $depth = 0, $args = null) {
         // Not needed for single level footer menu
     }
     
     // Start Element
-    function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
+    public function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
         $classes = empty($item->classes) ? array() : (array) $item->classes;
         $classes[] = 'menu-item-' . $item->ID;
         
@@ -525,21 +523,21 @@ class MySpace_Footer_Walker extends Walker_Nav_Menu {
         $attributes .= ! empty($item->url)        ? ' href="'   . esc_attr($item->url        ) .'"' : '';
         
         $item_output = '';
-        if (isset($args->before ?? null)) {
-            $item_output .= $args->before ?? '';
+        if (isset($args->before)) {
+            $item_output .= $args->before;
         }
         $item_output .= '<a' . $attributes . '>';
-        $item_output .= ($args->link_before ?? '') . apply_filters('the_title', $item->title, $item->ID) . ($args->link_after ?? '');
+        $item_output .= (isset($args->link_before) ? $args->link_before : '') . apply_filters('the_title', $item->title, $item->ID) . (isset($args->link_after) ? $args->link_after : '');
         $item_output .= '</a>';
-        if (isset($args->after ?? null)) {
-            $item_output .= $args->after ?? '';
+        if (isset($args->after)) {
+            $item_output .= $args->after;
         }
         
         $output .= apply_filters('walker_nav_menu_start_el', $item_output, $item, $depth, $args);
     }
     
     // End Element
-    function end_el(&$output, $item, $depth = 0, $args = null) {
+    public function end_el(&$output, $item, $depth = 0, $args = null) {
         // Add separator between menu items (MySpace style)
         $output .= " | ";
     }
