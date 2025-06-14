@@ -57,6 +57,10 @@ class MySpace_Profile_Widget extends WP_Widget {
         
         echo '<div class="profile-section">';
         echo '<h2 class="profile-name">' . esc_html($name) . '</h2>';
+
+        if ($image) {
+            echo '<img src="' . esc_url($image) . '" alt="Profile Picture" class="profile-pic">';
+        }
         
         if ($status) {
             echo '<p class="profile-status"> ' . esc_html($status) . '</p>';
@@ -65,9 +69,7 @@ class MySpace_Profile_Widget extends WP_Widget {
             echo '<p><strong>-</strong> ' . esc_html($statusauth) . '</p>';
         }
         
-        if ($image) {
-            echo '<img src="' . esc_url($image) . '" alt="Profile Picture" class="profile-pic">';
-        }
+        
         
         echo '<div class="profile-details">';
         if ($gender) echo '<p><strong>Gender:</strong> ' . esc_html($gender) . '</p>';
