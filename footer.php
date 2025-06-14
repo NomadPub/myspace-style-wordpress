@@ -1,13 +1,32 @@
+<?php
+/**
+ * The template for displaying the footer
+ * Updated to support custom WordPress menu
+ */
+?>
+
 </div> <!-- Close main content wrapper if needed -->
 
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-links">
-                <a href="<?php echo home_url('/'); ?>">Home</a> | 
-                <a href="<?php echo home_url('/about'); ?>">About</a> | 
-                <a href="<?php echo home_url('/contact'); ?>">Contact</a> | 
-                <a href="<?php echo home_url('/privacy'); ?>">Privacy</a> | 
-                <a href="<?php echo home_url('/terms'); ?>">Terms</a>
+                <?php
+                // Check if a custom footer menu is assigned
+                if (has_nav_menu('footer')) {
+                    wp_nav_menu(array(
+                        'theme_location' => 'footer',
+                        'menu_class'     => 'footer-menu',
+                        'container'      => false,
+                        'depth'          => 1,
+                        'fallback_cb'    => 'myspace_footer_fallback_menu',
+                        'items_wrap'     => '%3$s',
+                        'walker'         => new MySpace_Footer_Walker()
+                    ));
+                } else {
+                    // Fallback to default links if no custom menu is set
+                    myspace_footer_fallback_menu();
+                }
+                ?>
             </div>
             
             <div class="footer-info">
