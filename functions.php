@@ -211,7 +211,7 @@ class MySpace_Contact_Widget extends WP_Widget {
         echo '<a href="mailto:' . get_option('admin_email') . '" class="contact-link">📨 Forward to Friend</a>';
         echo '<a href="#" class="contact-link">⭐ Add to Favorites</a>';
         echo '<a href="/blocked" class="contact-link">🚫 Block User</a>';
-        echo '<a href="#" class="contact-link">📊 Rank User</a>';
+        echo '<a href="/rank" class="contact-link">📊 Rank User</a>';
         echo '</div></div>';
         echo $args['after_widget'];
     }
