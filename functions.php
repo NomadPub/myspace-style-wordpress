@@ -463,6 +463,61 @@ function myspace_customize_register($wp_customize) {
         'section' => 'myspace_options',
         'type' => 'checkbox',
     ));
+
+    // Add Footer section
+    $wp_customize->add_section('myspace_footer', array(
+        'title' => 'Footer Settings',
+        'priority' => 130,
+    ));
+    
+    // Footer text
+    $wp_customize->add_setting('footer_text', array(
+        'default' => '© ' . date('Y') . ' ' . get_bloginfo('name') . '. All rights reserved.',
+        'sanitize_callback' => 'wp_kses_post',
+    ));
+    
+    $wp_customize->add_control('footer_text', array(
+        'label' => 'Footer Text',
+        'section' => 'myspace_footer',
+        'type' => 'textarea',
+    ));
+    
+    // Social media links
+    $wp_customize->add_setting('myspace_twitter_url', array(
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    
+    $wp_customize->add_control('myspace_twitter_url', array(
+        'label' => 'Twitter URL',
+        'section' => 'myspace_footer',
+        'type' => 'url',
+    ));
+    
+    $wp_customize->add_setting('myspace_linkedin_url', array(
+        'default' => '',
+        'sanitize_callback' => 'esc_url_raw',
+    ));
+    
+    $wp_customize->add_control('myspace_linkedin_url', array(
+        'label' => 'LinkedIn URL',
+        'section' => 'myspace_footer',
+        'type' => 'url',
+    ));
+    
+    $wp_customize->add_setting('myspace_email', array(
+        'default' => '',
+        'sanitize_callback' => 'sanitize_email',
+    ));
+    
+    $wp_customize->add_control('myspace_email', array(
+        'label' => 'Email Address',
+        'section' => 'myspace_footer',
+        'type' => 'email',
+    ));
+    
+
+    
 }
 add_action('customize_register', 'myspace_customize_register');
 
