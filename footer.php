@@ -30,10 +30,11 @@
             </div>
             
             <div class="footer-info">
+                <br/>
                 <p>&copy; <?php echo date('Y'); ?> <?php bloginfo('name'); ?>. All rights reserved.</p>
                 <p>
                     Powered by <a href="https://wordpress.org" style="color: #ccc;">WordPress</a> | 
-                    MySpace Revival Theme by <a href="<?php echo home_url('/'); ?>" style="color: #ccc;"><?php bloginfo('name'); ?></a>
+                   <!-- MySpace Revival Theme by <a href="<?php echo home_url('/'); ?>" style="color: #ccc;"><?php bloginfo('name'); ?></a> -->
                 </p>
             </div>
             
