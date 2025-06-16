@@ -92,7 +92,7 @@ a:hover {
 
 .site-title h1 a {
     text-decoration: none;
-    color: inherit;
+    color: white;
 }
 
 .site-title h1 a:hover {
@@ -577,6 +577,11 @@ a:hover {
     margin-top: 40px;
     font-size: 10px;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.site-footer a {
+    color: white;
+    text-decoration: none;
 }
 
 /* Responsive Design - MAJOR FIXES */
