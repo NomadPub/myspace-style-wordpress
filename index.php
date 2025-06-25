@@ -1,12 +1,5 @@
 <?php get_header(); ?>
 
-<!-- Top Widget Area -->
-<div class="top-widget-area">
-    <?php if (is_active_sidebar('top-widget-area')) : ?>
-        <?php dynamic_sidebar('top-widget-area'); ?>
-    <?php endif; ?>
-</div>
-
 <div class="container">
     <div class="sidebar">
         <?php if (is_active_sidebar('profile-sidebar')) : ?>
@@ -15,6 +8,14 @@
     </div>
     
     <div class="content">
+        
+        <!-- Top Widget Area -->
+<div class="top-widget-area">
+    <?php if (is_active_sidebar('top-widget-area')) : ?>
+        <?php dynamic_sidebar('top-widget-area'); ?>
+    <?php endif; ?>
+</div>
+        
         <div class="status-update">
 <h2><?php echo esc_html(get_transient('myspace_banner_message') ?: get_bloginfo('name') . ' is working on myspace plans!'); ?></h2>
         </div>
