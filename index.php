@@ -1,5 +1,12 @@
 <?php get_header(); ?>
 
+<!-- Top Widget Area -->
+<div class="top-widget-area">
+    <?php if (is_active_sidebar('top-widget-area')) : ?>
+        <?php dynamic_sidebar('top-widget-area'); ?>
+    <?php endif; ?>
+</div>
+
 <div class="container">
     <div class="sidebar">
         <?php if (is_active_sidebar('profile-sidebar')) : ?>
