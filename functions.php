@@ -35,6 +35,20 @@ function myspace_widgets_init() {
 }
 add_action('widgets_init', 'myspace_widgets_init');
 
+// Widget for top of main content 
+function myspace_register_top_widget_area() {
+    register_sidebar(array(
+        'name'          => __('Top Widget Area', 'myspace'),
+        'id'            => 'top-widget-area',
+        'description'   => __('Widgets in this area will be shown at the top of the page.', 'myspace'),
+        'before_widget' => '<div class="widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h4 class="widget-title">',
+        'after_title'   => '</h4>',
+    ));
+}
+add_action('widgets_init', 'myspace_register_top_widget_area');
+
 // Enhanced Profile Widget (combining basic and enhanced features)
 class MySpace_Profile_Widget extends WP_Widget {
     public function __construct() {
